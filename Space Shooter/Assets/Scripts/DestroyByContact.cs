@@ -5,9 +5,17 @@ using UnityEngine;
 public class DestroyByContact : MonoBehaviour {
 	public GameObject explosion;
 	public GameObject playerExplosion;
+
+	public int score;
+	private GameController gameController;
 	// Use this for initialization
 	void Start () {
-		
+		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
+		if (gameControllerObject != null) {
+			gameController = gameControllerObject.GetComponent<GameController> ();
+		} else {
+			Debug.Log ("Can't find 'GameController' script");
+		}
 	}
 	
 	// Update is called once per frame
@@ -23,7 +31,10 @@ public class DestroyByContact : MonoBehaviour {
 		Instantiate (explosion, transform.position, transform.rotation);
 		if (other.tag == "Player") {
 			Instantiate (playerExplosion, other.transform.position, other.transform.rotation);
+			gameController.GameOver ();
 		}
+
+		gameController.AddScore (score);
 			
 		Destroy (other.gameObject);
 		Destroy (gameObject);
